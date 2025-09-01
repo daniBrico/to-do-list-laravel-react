@@ -20,4 +20,20 @@ export default tseslint.config([
       globals: globals.browser,
     },
   },
+  {
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-expressions': 'error',
+      'react-hooks/exhaustive-deps': 'off',
+      // '@typescript-eslint/no-explicit-any': 'off'
+      // '@typescript-eslint/strict-boolean-expressions': 'error'
+    },
+  },
 ])
