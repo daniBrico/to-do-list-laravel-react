@@ -30,7 +30,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ addTodo }) => {
         type="text"
         value={inputValue}
         placeholder="Type task"
-        className="border-zinc-800 bg-zinc-900/60 py-5 pl-4 text-white shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
+        className="border-zinc-800 bg-zinc-900/60 py-5 pl-4 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
         onChange={(e) => handleTaskInputOnChange(e)}
       />
       <Button

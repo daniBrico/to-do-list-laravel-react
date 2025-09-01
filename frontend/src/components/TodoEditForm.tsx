@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import type { TodoType } from '@/types/types'
@@ -10,6 +10,7 @@ interface TodoEditFormProps {
 
 const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
   const [inputValue, setInputValue] = useState(todo.task)
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
@@ -18,6 +19,12 @@ const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
 
     setInputValue('')
   }
+
+  useEffect(() => {
+    if (inputRef === null || inputRef.current === null) return
+
+    inputRef.current.focus()
+  }, [])
 
   const handleTaskInputOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -33,6 +40,7 @@ const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
         type="text"
         value={inputValue}
         placeholder="Type Task"
+        ref={inputRef}
         className="border-zinc-800 bg-zinc-900/60 py-5 pl-4 text-white shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
         onChange={(e) => handleTaskInputOnChange(e)}
       />

@@ -28,6 +28,7 @@ const Todo: React.FC<TodoProps> = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     e.stopPropagation()
+
     editTodo(todo.id)
   }
 
@@ -37,9 +38,10 @@ const Todo: React.FC<TodoProps> = ({
         <Checkbox
           onCheckedChange={() => toggleComplete(todo.id)}
           className="h-5 w-5 cursor-pointer"
+          checked={todo.completed}
         />
         <p
-          className={classNames('text-base font-normal text-zinc-300', {
+          className={classNames('text-base font-light text-zinc-300', {
             'line-through opacity-60': todo.completed
           })}
         >
