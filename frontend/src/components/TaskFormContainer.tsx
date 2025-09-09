@@ -51,10 +51,13 @@ const TodoFormContainer: React.FC = () => {
     )
 
   return (
-    <div className="w-2xl rounded-md bg-zinc-800 p-8 shadow-md shadow-zinc-950">
+    <div className="max-h-72 w-2xl rounded-md bg-zinc-800 p-8 shadow-md shadow-zinc-950">
       <TodoForm addTodo={addTodo} />
       {tasks.length > 0 ? (
-        <div className="mt-6 flex flex-col gap-2">
+        <div
+          data-before={'Task list'}
+          className="relative mt-12 flex flex-col gap-3 rounded-sm bg-zinc-700/20 px-2 py-4 before:absolute before:-top-6 before:left-2 before:z-10 before:text-base before:font-light before:text-zinc-400 before:content-[attr(data-before)]"
+        >
           {tasks.map((todo, index) =>
             todo.isEditing ? (
               <TodoEditForm key={index} editTask={editTask} todo={todo} />
