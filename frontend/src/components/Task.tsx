@@ -1,11 +1,11 @@
 import classNames from 'classnames'
-import type { TodoType } from '@/types/types'
+import type { Task } from '@/types/types'
 import EditIconSvg from './svg/EditIconSvg'
 import TrashIconSvg from './svg/TrashIconSvg'
 import { Checkbox } from './ui/checkbox'
 
 interface TodoProps {
-  todo: TodoType
+  todo: Task
   deleteTodo: (id: string) => void
   editTodo: (id: string) => void
   toggleComplete: (id: string) => void
@@ -38,11 +38,11 @@ const Todo: React.FC<TodoProps> = ({
         <Checkbox
           onCheckedChange={() => toggleComplete(todo.id)}
           className="h-5 w-5 cursor-pointer"
-          checked={todo.completed}
+          checked={todo.isCompleted}
         />
         <p
           className={classNames('text-base font-light text-zinc-300', {
-            'line-through opacity-60': todo.completed
+            'line-through opacity-60': todo.isCompleted
           })}
         >
           {todo.task}

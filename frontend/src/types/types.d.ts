@@ -1,7 +1,16 @@
+declare((strict_types = 1))
+
 // Todo types
-export interface TodoType {
+export interface Task {
   id: string
   task: string
-  completed: boolean
+  isCompleted: boolean
   isEditing: boolean
+}
+
+export type TaskAPI = Omit<Task, 'isEditing'>
+
+export interface Response {
+  tasks: TaskAPI[]
+  status: number
 }
