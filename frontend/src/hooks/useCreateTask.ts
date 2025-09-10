@@ -2,14 +2,14 @@ import { setTask } from '@/services/task'
 import type { TaskAPI } from '@/types/types'
 import { useState } from 'react'
 
-interface useSetTaskReturn {
+interface useCreateTaskReturn {
   taskFromAPI: TaskAPI | null
   taskError: Error | null
   taskIsLoading: boolean
   createTask: (task: TaskAPI) => Promise<void>
 }
 
-const useSetTask = (): useSetTaskReturn => {
+const useCreateTask = (): useCreateTaskReturn => {
   const [taskFromAPI, setTaskFromAPI] = useState<TaskAPI | null>(null)
   const [taskError, setTaskError] = useState<Error | null>(null)
   const [taskIsLoading, setTaskIsLoading] = useState<boolean>(false)
@@ -31,4 +31,4 @@ const useSetTask = (): useSetTaskReturn => {
   return { createTask, taskFromAPI, taskError, taskIsLoading }
 }
 
-export default useSetTask
+export default useCreateTask

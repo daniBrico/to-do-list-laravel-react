@@ -4,13 +4,13 @@ import Todo from './Task'
 import type { Task } from '@/types/types'
 import TodoEditForm from './TaskEditForm'
 import useGetTasks from '@/hooks/useGetTasks'
-import useSetTask from '@/hooks/useSetTask'
+import useCreateTask from '@/hooks/useCreateTask'
 
 const TodoFormContainer: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
 
   const { tasksFromAPI } = useGetTasks()
-  const { createTask, taskFromAPI } = useSetTask()
+  const { createTask, taskFromAPI, taskIsLoading } = useCreateTask()
 
   useEffect(() => {
     if (tasksFromAPI.length === 0) return
@@ -64,7 +64,7 @@ const TodoFormContainer: React.FC = () => {
 
   return (
     <div className="max-h-96 w-2xl rounded-md bg-zinc-800 p-8 shadow-md shadow-zinc-950">
-      <TodoForm addTask={addTask} />
+      <TodoForm addTask={addTask} taskIsLoading={taskIsLoading} />
       <p className="mt-6 ml-2 text-base font-light text-zinc-400">Task list</p>
       {tasks.length > 0 ? (
         <div className="flex max-h-48 flex-col gap-3 overflow-y-scroll rounded-sm bg-zinc-700/20 px-2 py-4">
