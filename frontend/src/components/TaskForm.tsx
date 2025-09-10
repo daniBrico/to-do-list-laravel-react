@@ -3,16 +3,16 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 
 interface TodoFormProps {
-  addTodo: (todo: string) => void
+  addTask: (todo: string) => void
 }
 
-const TodoForm: React.FC<TodoFormProps> = ({ addTodo }) => {
+const TodoForm: React.FC<TodoFormProps> = ({ addTask }) => {
   const [inputValue, setInputValue] = useState('')
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    addTodo(inputValue)
+    addTask(inputValue)
     setInputValue('')
   }
 

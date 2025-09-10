@@ -6,22 +6,22 @@ import { Checkbox } from './ui/checkbox'
 
 interface TodoProps {
   todo: Task
-  deleteTodo: (id: string) => void
+  deleteTask: (id: string) => void
   editTodo: (id: string) => void
   toggleComplete: (id: string) => void
 }
 
 const Todo: React.FC<TodoProps> = ({
   todo,
-  deleteTodo,
+  deleteTask,
   editTodo,
   toggleComplete
 }) => {
-  const handleDeleteTodo = (
+  const handleDeleteTask = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     e.stopPropagation()
-    deleteTodo(todo.id)
+    deleteTask(todo.id)
   }
 
   const handleEditTodo = (
@@ -57,7 +57,7 @@ const Todo: React.FC<TodoProps> = ({
         </button>
         <p className="text-base text-zinc-600">|</p>
         <button
-          onClick={(e) => handleDeleteTodo(e)}
+          onClick={(e) => handleDeleteTask(e)}
           className="w-6 cursor-pointer text-slate-500 transition-all duration-300 ease-in-out hover:scale-110 hover:text-slate-400"
         >
           <TrashIconSvg />

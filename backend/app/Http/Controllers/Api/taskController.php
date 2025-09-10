@@ -35,19 +35,19 @@ class taskController extends Controller
         if ($validator->fails()) {
             $data = [
                 'message' => 'Error en la validación de los datos',
-                'erros' => $validator->errors()->first(),
+                'errors' => $validator->errors()->first(),
                 'status' => 400
             ];
 
             return response()->json($data, 400);
         }
 
-        $task = Task::create([
+        $createdTask = Task::create([
             'task' => $request->task,
             'isCompleted' => $request->isCompleted,
         ]);
 
-        if (!$task) {
+        if (!$createdTask) {
             $data = [
                 'message' => 'Error al crear la tarea',
                 'status' => 500
@@ -57,7 +57,7 @@ class taskController extends Controller
         }
 
         $data = [
-            'task' => $task,
+            'task' => $createdTask->only(['id', 'task', 'isCompleted']),
             'status' => 201
         ];
 
@@ -133,7 +133,7 @@ class taskController extends Controller
         if ($validator->fails()) {
             $data = [
                 'message' => 'Error en la validación de los datos',
-                'erros' => $validator->errors(),
+                'errors' => $validator->errors(),
                 'status' => 400
             ];
         }

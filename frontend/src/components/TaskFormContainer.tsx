@@ -1,22 +1,16 @@
 import { useEffect, useState } from 'react'
 import TodoForm from './TaskForm'
-import { v4 as uuidv4 } from 'uuid'
 import Todo from './Task'
 import type { Task } from '@/types/types'
 import TodoEditForm from './TaskEditForm'
 import useGetTasks from '@/hooks/useGetTasks'
+import useSetTask from '@/hooks/useSetTask'
 
 const TodoFormContainer: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
 
   const { tasksFromAPI } = useGetTasks()
-
-  const addTodo = (todo: string): void => {
-    setTasks([
-      ...tasks,
-      { id: uuidv4(), task: todo, isCompleted: false, isEditing: false }
-    ])
-  }
+  const { createTask, taskFromAPI } = useSetTask()
 
   useEffect(() => {
     if (tasksFromAPI.length === 0) return
@@ -24,7 +18,25 @@ const TodoFormContainer: React.FC = () => {
     setTasks(tasksFromAPI)
   }, [tasksFromAPI])
 
-  const deleteTodo = (id: string): void =>
+  useEffect(() => {
+    if (taskFromAPI === null) return
+
+    setTasks([
+      ...tasks,
+      {
+        id: taskFromAPI.id,
+        task: taskFromAPI.task,
+        isCompleted: false,
+        isEditing: false
+      }
+    ])
+  }, [taskFromAPI])
+
+  const addTask = (todo: string): void => {
+    createTask({ task: todo, isCompleted: false })
+  }
+
+  const deleteTask = (id: string): void =>
     setTasks(tasks.filter((todo) => todo.id !== id))
 
   const editTodo = (id: string): void =>
@@ -51,13 +63,11 @@ const TodoFormContainer: React.FC = () => {
     )
 
   return (
-    <div className="max-h-72 w-2xl rounded-md bg-zinc-800 p-8 shadow-md shadow-zinc-950">
-      <TodoForm addTodo={addTodo} />
+    <div className="max-h-96 w-2xl rounded-md bg-zinc-800 p-8 shadow-md shadow-zinc-950">
+      <TodoForm addTask={addTask} />
+      <p className="mt-6 ml-2 text-base font-light text-zinc-400">Task list</p>
       {tasks.length > 0 ? (
-        <div
-          data-before={'Task list'}
-          className="relative mt-12 flex flex-col gap-3 rounded-sm bg-zinc-700/20 px-2 py-4 before:absolute before:-top-6 before:left-2 before:z-10 before:text-base before:font-light before:text-zinc-400 before:content-[attr(data-before)]"
-        >
+        <div className="flex max-h-48 flex-col gap-3 overflow-y-scroll rounded-sm bg-zinc-700/20 px-2 py-4">
           {tasks.map((todo, index) =>
             todo.isEditing ? (
               <TodoEditForm key={index} editTask={editTask} todo={todo} />
@@ -65,7 +75,7 @@ const TodoFormContainer: React.FC = () => {
               <Todo
                 key={index}
                 todo={todo}
-                deleteTodo={deleteTodo}
+                deleteTask={deleteTask}
                 editTodo={editTodo}
                 toggleComplete={toggleComplete}
               />
