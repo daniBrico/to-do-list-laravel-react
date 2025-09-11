@@ -33,7 +33,7 @@ const Todo: React.FC<TodoProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900/60 px-4 py-2 shadow-md shadow-zinc-900">
+    <div className="flex h-10 items-center justify-between rounded-md border border-zinc-800 bg-zinc-900/60 px-4 py-2 shadow-md shadow-zinc-900">
       <div className="flex items-center gap-2">
         <Checkbox
           onCheckedChange={() => toggleComplete(todo.id)}
