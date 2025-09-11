@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
 import TodoForm from './TaskForm'
 import Todo from './Task'
-import type { Task } from '@/types/types'
+import type { Task, TaskID } from '@/types/types'
 import TodoEditForm from './TaskEditForm'
 import useGetTasks from '@/hooks/useGetTasks'
 import useCreateTask from '@/hooks/useCreateTask'
+import useDeleteTask from '@/hooks/useDeleteTask'
 
 const TodoFormContainer: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
 
   const { tasksFromAPI } = useGetTasks()
   const { createTask, taskFromAPI, taskIsLoading } = useCreateTask()
+  const { deleteTaskError, deleteTaskFromAPI } = useDeleteTask()
 
   useEffect(() => {
     if (tasksFromAPI.length === 0) return
@@ -33,27 +35,37 @@ const TodoFormContainer: React.FC = () => {
   }, [taskFromAPI])
 
   const addTask = (todo: string): void => {
-    createTask({ task: todo, isCompleted: false })
+    createTask({ id: 0, task: todo, isCompleted: false })
   }
 
-  const deleteTask = (id: string): void =>
-    setTasks(tasks.filter((todo) => todo.id !== id))
+  const deleteTask = async (id: TaskID): Promise<void> => {
+    const wasTaskDeleted = await deleteTaskFromAPI(id)
 
-  const editTodo = (id: string): void =>
+    if (wasTaskDeleted) {
+      setTasks(tasks.filter((todo) => todo.id !== id))
+      return
+    }
+
+    console.error(deleteTaskError?.message || 'No se pudo eliminar la tarea.')
+  }
+
+  const changeTaskIsEditing = (id: TaskID): void =>
     setTasks(
       tasks.map((todo) =>
         todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
       )
     )
 
-  const toggleComplete = (id: string): void =>
+  const toggleComplete = (id: TaskID): void =>
     setTasks(
       tasks.map((todo) =>
         todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
       )
     )
 
-  const editTask = (id: string, taskText: string): void =>
+  const editTask = (id: TaskID, taskText: string): void => {
+    // Tengo el id y el nuevo texto de la tarea que debo modificar
+
     setTasks(
       tasks.map((todo) =>
         todo.id === id
@@ -61,6 +73,7 @@ const TodoFormContainer: React.FC = () => {
           : todo
       )
     )
+  }
 
   return (
     <div className="max-h-96 w-2xl rounded-md bg-zinc-800 p-8 shadow-md shadow-zinc-950">
@@ -76,7 +89,7 @@ const TodoFormContainer: React.FC = () => {
                 key={index}
                 todo={todo}
                 deleteTask={deleteTask}
-                editTodo={editTodo}
+                changeTaskIsEditing={changeTaskIsEditing}
                 toggleComplete={toggleComplete}
               />
             )

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import type { Task } from '@/types/types'
+import type { Task, TaskID } from '@/types/types'
 
 interface TodoEditFormProps {
-  editTask: (todoId: string, taskText: string) => void
+  editTask: (todoId: TaskID, taskText: string) => void
   todo: Task
 }
 

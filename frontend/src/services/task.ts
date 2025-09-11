@@ -1,4 +1,4 @@
-import type { Task, TaskAPI } from '@/types/types'
+import type { Task, TaskAPI, TaskID } from '@/types/types'
 import api from './api'
 
 export interface ResponseGetTasks {
@@ -41,4 +41,17 @@ export const setTask = async (task: TaskAPI): Promise<Task | null> => {
   }
 
   return newTask
+}
+
+interface deleteTaskResponse {
+  message: string
+  status: number
+}
+
+export const deleteTask = async (id: TaskID): Promise<boolean> => {
+  const res = await api<deleteTaskResponse>(`api/tasks/${id}`, {
+    method: 'DELETE'
+  })
+
+  return res?.status === 200
 }

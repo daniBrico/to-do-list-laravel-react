@@ -1,20 +1,20 @@
 import classNames from 'classnames'
-import type { Task } from '@/types/types'
+import type { Task, TaskID } from '@/types/types'
 import EditIconSvg from './svg/EditIconSvg'
 import TrashIconSvg from './svg/TrashIconSvg'
 import { Checkbox } from './ui/checkbox'
 
 interface TodoProps {
   todo: Task
-  deleteTask: (id: string) => void
-  editTodo: (id: string) => void
-  toggleComplete: (id: string) => void
+  deleteTask: (id: TaskID) => void
+  changeTaskIsEditing: (id: TaskID) => void
+  toggleComplete: (id: TaskID) => void
 }
 
 const Todo: React.FC<TodoProps> = ({
   todo,
   deleteTask,
-  editTodo,
+  changeTaskIsEditing,
   toggleComplete
 }) => {
   const handleDeleteTask = (
@@ -24,12 +24,12 @@ const Todo: React.FC<TodoProps> = ({
     deleteTask(todo.id)
   }
 
-  const handleEditTodo = (
+  const handleChangeTaskIsEditing = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     e.stopPropagation()
 
-    editTodo(todo.id)
+    changeTaskIsEditing(todo.id)
   }
 
   return (
@@ -50,7 +50,7 @@ const Todo: React.FC<TodoProps> = ({
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={(e) => handleEditTodo(e)}
+          onClick={(e) => handleChangeTaskIsEditing(e)}
           className="w-6 cursor-pointer text-slate-500 transition-all duration-300 ease-in-out hover:scale-110 hover:text-slate-400"
         >
           <EditIconSvg />

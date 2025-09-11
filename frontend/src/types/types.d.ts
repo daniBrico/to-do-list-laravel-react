@@ -1,8 +1,10 @@
 declare((strict_types = 1))
 
+export type TaskID = number
+
 // Todo types
 export interface Task {
-  id?: string
+  id: TaskID
   task: string
   isCompleted: boolean
   isEditing: boolean
