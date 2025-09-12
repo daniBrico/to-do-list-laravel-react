@@ -7,6 +7,7 @@ interface useCreateTaskReturn {
   createTaskError: Error | null
   taskIsLoading: boolean
   newTask: (task: TaskAPI) => Promise<void>
+  setCreateTaskError: React.Dispatch<React.SetStateAction<Error | null>>
 }
 
 const useCreateTask = (): useCreateTaskReturn => {
@@ -28,7 +29,13 @@ const useCreateTask = (): useCreateTaskReturn => {
     }
   }
 
-  return { newTask, taskFromAPI, createTaskError, taskIsLoading }
+  return {
+    newTask,
+    taskFromAPI,
+    createTaskError,
+    taskIsLoading,
+    setCreateTaskError
+  }
 }
 
 export default useCreateTask

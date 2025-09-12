@@ -14,8 +14,13 @@ const TaskFormContainer: React.FC = () => {
   const [displayMessage, setDisplayMessage] = useState(false)
 
   const { tasksFromAPI, tasksIsLoading } = useGetTasks()
-  const { newTask, taskFromAPI, taskIsLoading, createTaskError } =
-    useCreateTask()
+  const {
+    newTask,
+    taskFromAPI,
+    taskIsLoading,
+    createTaskError,
+    setCreateTaskError
+  } = useCreateTask()
   const { deleteTaskError, deleteTaskFromAPI } = useDeleteTask()
 
   useEffect(() => {
@@ -43,6 +48,12 @@ const TaskFormContainer: React.FC = () => {
 
     const timeout = setTimeout(() => {
       setDisplayMessage(false)
+
+      const timeoutTwo = setTimeout(() => {
+        setCreateTaskError(null)
+      }, 1000)
+
+      return (): void => clearTimeout(timeoutTwo)
     }, 3000)
 
     return (): void => {
@@ -102,8 +113,8 @@ const TaskFormContainer: React.FC = () => {
       <CreateNewTaskMessage
         textMessage={
           createTaskError === null
-            ? 'La tarea se agrego exitosamente'
-            : 'Ocurrio un error al agregar la tarea'
+            ? 'La tarea se agregó exitosamente'
+            : 'Ocurrió un error al agregar la tarea'
         }
         displayMessage={displayMessage}
         taskIsLoading={taskIsLoading}
@@ -117,27 +128,27 @@ const TaskFormContainer: React.FC = () => {
             <p className="text-base text-zinc-400">Cargando tareas</p>
           </div>
         ) : null}
-        {tasks.length > 0 ? (
-          tasks.map((todo, index) =>
-            todo.isEditing ? (
-              <TodoEditForm key={index} editTask={editTask} todo={todo} />
-            ) : (
-              <Todo
-                key={index}
-                todo={todo}
-                deleteTask={deleteTask}
-                changeTaskIsEditing={changeTaskIsEditing}
-                toggleComplete={toggleComplete}
-              />
+        {tasks.length > 0
+          ? tasks.map((todo, index) =>
+              todo.isEditing ? (
+                <TodoEditForm key={index} editTask={editTask} todo={todo} />
+              ) : (
+                <Todo
+                  key={index}
+                  todo={todo}
+                  deleteTask={deleteTask}
+                  changeTaskIsEditing={changeTaskIsEditing}
+                  toggleComplete={toggleComplete}
+                />
+              )
             )
-          )
-        ) : (
-          <div className="flex h-48 w-full flex-col items-center justify-center gap-2">
-            <p className="rounded-md bg-zinc-600/20 px-4 py-2 text-base text-zinc-400">
-              No hay tareas cargadas
-            </p>
-          </div>
-        )}
+          : !tasksIsLoading && (
+              <div className="flex h-48 w-full flex-col items-center justify-center gap-2">
+                <p className="rounded-md bg-zinc-600/20 px-4 py-2 text-base text-zinc-400">
+                  No hay tareas cargadas
+                </p>
+              </div>
+            )}
       </div>
     </div>
   )

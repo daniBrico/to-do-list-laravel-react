@@ -34,7 +34,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     if (createTaskError !== null) return
 
     setInputValue('')
-  }, [createTaskError, taskIsLoading])
+  }, [taskIsLoading])
 
   return (
     <form
