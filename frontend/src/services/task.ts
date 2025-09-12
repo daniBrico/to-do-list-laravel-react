@@ -23,7 +23,7 @@ export interface ResponseSetTask {
   status: number
 }
 
-export const setTask = async (task: TaskAPI): Promise<Task | null> => {
+export const createTask = async (task: TaskAPI): Promise<Task | null> => {
   const res = await api<ResponseSetTask>('api/task', {
     method: 'POST',
     body: JSON.stringify(task)

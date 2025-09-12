@@ -1,26 +1,40 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { LoadingSpinner } from './LoadingSpinner'
 
-interface TodoFormProps {
+interface TaskFormProps {
   addTask: (todo: string) => void
   taskIsLoading: boolean
+  createTaskError: null | Error
 }
 
-const TodoForm: React.FC<TodoFormProps> = ({ addTask, taskIsLoading }) => {
+const TaskForm: React.FC<TaskFormProps> = ({
+  addTask,
+  taskIsLoading,
+  createTaskError
+}) => {
   const [inputValue, setInputValue] = useState('')
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
+    if (inputValue === '') return
+
     addTask(inputValue)
-    setInputValue('')
   }
 
   const handleTaskInputOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => setInputValue(e.target.value)
+
+  useEffect(() => {
+    if (taskIsLoading) return
+
+    if (createTaskError !== null) return
+
+    setInputValue('')
+  }, [createTaskError, taskIsLoading])
 
   return (
     <form
@@ -38,6 +52,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ addTask, taskIsLoading }) => {
       <Button
         type="submit"
         className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
+        disabled={taskIsLoading}
       >
         Add Task
       </Button>
@@ -46,4 +61,4 @@ const TodoForm: React.FC<TodoFormProps> = ({ addTask, taskIsLoading }) => {
   )
 }
 
-export default TodoForm
+export default TaskForm

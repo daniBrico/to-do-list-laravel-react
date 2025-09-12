@@ -21,8 +21,8 @@ const api = async <T = unknown>(
 
     return await res.json()
   } catch (error) {
-    console.error(error)
-    return null
+    console.error('Error en api: ', error)
+    throw error
   }
 }
 
