@@ -106,12 +106,29 @@ const TaskFormContainer: React.FC = () => {
       )
     )
 
-  const toggleComplete = (id: TaskID): void =>
+  const toggleComplete = async (selectedTaskID: TaskID): Promise<void> => {
+    const selectedTask: TaskType | undefined = tasks.find(
+      (task) => task.id === selectedTaskID
+    )
+
+    if (selectedTask === undefined) return
+
+    const success = await updateSelectedTask({
+      id: selectedTaskID,
+      isCompleted: !selectedTask.isCompleted,
+      text: selectedTask.text
+    })
+
+    if (!success) return
+
     setTasks(
       tasks.map((todo) =>
-        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+        todo.id === selectedTaskID
+          ? { ...todo, isCompleted: !todo.isCompleted }
+          : todo
       )
     )
+  }
 
   const editTask = async (
     selectedTaskID: TaskID,
