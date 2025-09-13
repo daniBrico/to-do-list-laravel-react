@@ -9,10 +9,12 @@ import useDeleteTask from '@/hooks/useDeleteTask'
 import { LoadingSpinner } from './LoadingSpinner'
 import CreateNewTaskMessage from './CreateNewTaskMessage'
 import useUpdateTask from '@/hooks/useUpdateTask'
+import classNames from 'classnames'
 
 const TaskFormContainer: React.FC = () => {
   const [tasks, setTasks] = useState<TaskType[]>([])
   const [displayMessage, setDisplayMessage] = useState(false)
+  const [displayEditingMessage, setDisplayEditingMessage] = useState(false)
 
   const { tasksFromAPI, tasksIsLoading } = useGetTasks()
   const {
@@ -23,8 +25,12 @@ const TaskFormContainer: React.FC = () => {
     setCreateTaskError
   } = useCreateTask()
   const { deleteTaskError, deleteTaskFromAPI } = useDeleteTask()
-  const { updateSelectedTask, updateTaskIsLoading, setUpdateTaskIsLoading } =
-    useUpdateTask()
+  const {
+    updateSelectedTask,
+    updateTaskIsLoading,
+    setUpdateTaskIsLoading,
+    updateTaskError
+  } = useUpdateTask()
 
   useEffect(() => {
     if (tasksFromAPI.length === 0) return
@@ -63,6 +69,19 @@ const TaskFormContainer: React.FC = () => {
       clearTimeout(timeout)
     }
   }, [displayMessage, taskIsLoading])
+
+  useEffect(() => {
+    if (updateTaskIsLoading === null || updateTaskIsLoading) return
+
+    setDisplayEditingMessage(true)
+
+    const timeout = setTimeout(() => {
+      setDisplayEditingMessage(false)
+      setUpdateTaskIsLoading(null)
+    }, 3000)
+
+    return (): void => clearTimeout(timeout)
+  }, [updateTaskError, updateTaskIsLoading])
 
   const addTask = (taskText: string): void => {
     newTask({ id: 0, text: taskText, isCompleted: false })
@@ -137,11 +156,28 @@ const TaskFormContainer: React.FC = () => {
         displayMessage={displayMessage}
         taskIsLoading={taskIsLoading}
       />
-      <p className="mt-12 ml-2 text-base font-light text-zinc-400">Task list</p>
-      <div className="scrollbar-styles flex max-h-48 min-h-48 flex-col gap-3 overflow-y-scroll rounded-sm bg-zinc-700/20 px-2 py-4">
+      <div className="mt-12 flex justify-between px-2 text-base font-light text-zinc-400">
+        <p className="">Task list</p>
+        <p
+          className={classNames(
+            'transform transition-all duration-300 ease-in-out',
+            {
+              'translate-y-0 opacity-100': displayEditingMessage,
+              'translate-y-2 opacity-0': !displayEditingMessage
+            }
+          )}
+        >
+          {updateTaskError === null
+            ? 'La tarea se actualizó correctamente'
+            : 'Ocurrió un error al actualizar la tarea'}
+        </p>
+      </div>
+      <div className="scrollbar-styles relative flex max-h-48 min-h-48 flex-col gap-3 overflow-y-scroll rounded-sm bg-zinc-700/20 px-2 py-4">
         {tasksIsLoading ? (
           <div className="flex h-48 w-full flex-col items-center justify-center gap-2">
-            <LoadingSpinner isLoading={tasksIsLoading} />
+            <div className="h-8 w-8">
+              <LoadingSpinner isLoading={tasksIsLoading} />
+            </div>
             <p className="text-base text-zinc-400">Cargando tareas</p>
           </div>
         ) : null}

@@ -56,7 +56,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
       >
         Add Task
       </Button>
-      <LoadingSpinner isLoading={taskIsLoading} />
+      <div className="h-8 w-8">
+        <LoadingSpinner isLoading={taskIsLoading} />
+      </div>
     </form>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import type { TaskType, TaskID } from '@/types/types'
+import { LoadingSpinner } from './LoadingSpinner'
 
 interface TodoEditFormProps {
   editTask: (todoId: TaskID, taskText: string) => void
@@ -44,40 +45,45 @@ const TodoEditForm: React.FC<TodoEditFormProps> = ({
   }
 
   return (
-    <div className="relative">
-      <form
-        className="flex items-center justify-center gap-4"
-        onSubmit={(e) => handleSubmit(e)}
-      >
+    <form
+      className="flex items-center justify-center gap-4"
+      onSubmit={(e) => handleSubmit(e)}
+    >
+      <div className="relative flex w-full items-center">
         <Input
           type="text"
           value={inputValue}
           placeholder="Type Task"
           ref={inputRef}
-          className="border-zinc-800 bg-zinc-900/60 py-5 pl-4 text-white shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
+          className="border-zinc-800 bg-zinc-900/60 py-5 pr-12 pl-4 text-white shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
           onChange={(e) => handleTaskInputOnChange(e)}
           disabled={updateTaskIsLoading === null ? false : updateTaskIsLoading}
         />
-        <div className="flex items-center justify-center gap-1">
-          <Button
-            type="button"
-            className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
-            onClick={() => handleCancelButton()}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
-            disabled={
-              updateTaskIsLoading === null ? false : updateTaskIsLoading
-            }
-          >
-            Edit
-          </Button>
-        </div>
-      </form>
-    </div>
+        {updateTaskIsLoading === null ? (
+          false
+        ) : (
+          <div className="absolute right-4 z-10 h-6 w-6">
+            <LoadingSpinner isLoading={true} />
+          </div>
+        )}
+      </div>
+      <div className="flex items-center justify-center gap-1">
+        <Button
+          type="button"
+          className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
+          onClick={() => handleCancelButton()}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
+          disabled={updateTaskIsLoading === null ? false : updateTaskIsLoading}
+        >
+          Edit
+        </Button>
+      </div>
+    </form>
   )
 }
 
