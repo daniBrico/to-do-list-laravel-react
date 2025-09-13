@@ -23,7 +23,8 @@ const TaskFormContainer: React.FC = () => {
     setCreateTaskError
   } = useCreateTask()
   const { deleteTaskError, deleteTaskFromAPI } = useDeleteTask()
-  const { updateSelectedTask } = useUpdateTask()
+  const { updateSelectedTask, updateTaskIsLoading, setUpdateTaskIsLoading } =
+    useUpdateTask()
 
   useEffect(() => {
     if (tasksFromAPI.length === 0) return
@@ -93,21 +94,21 @@ const TaskFormContainer: React.FC = () => {
       )
     )
 
-  const editTask = (selectedTaskID: TaskID, newTaskText: string): void => {
-    // Tengo el id y el nuevo texto de la tarea que debo modificar
+  const editTask = async (
+    selectedTaskID: TaskID,
+    newTaskText: string
+  ): Promise<void> => {
     const selectedTask: TaskType | undefined = tasks.find(
       (task) => task.id === selectedTaskID
     )
 
     if (selectedTask === undefined) return
 
-    const success = updateSelectedTask({
+    const success = await updateSelectedTask({
       id: selectedTaskID,
       isCompleted: selectedTask.isCompleted,
       text: newTaskText
     })
-
-    console.log('🚀 ~ editTask ~ success: ', success)
 
     if (!success) return
 
@@ -147,7 +148,14 @@ const TaskFormContainer: React.FC = () => {
         {tasks.length > 0
           ? tasks.map((todo, index) =>
               todo.isEditing ? (
-                <TodoEditForm key={index} editTask={editTask} todo={todo} />
+                <TodoEditForm
+                  key={index}
+                  editTask={editTask}
+                  todo={todo}
+                  updateTaskIsLoading={updateTaskIsLoading}
+                  changeTaskIsEditing={changeTaskIsEditing}
+                  setUpdateTaskIsLoading={setUpdateTaskIsLoading}
+                />
               ) : (
                 <Task
                   key={index}

@@ -56,11 +56,38 @@ export const deleteTask = async (id: TaskID): Promise<boolean> => {
   return res?.status === 200
 }
 
-export const updateTask = async (task: TaskAPI): Promise<boolean> => {
-  const res = await api<messageAndStatusResponse>(`api/tasks/${task.id}`, {
-    method: 'PUT',
-    body: JSON.stringify(task)
-  })
+// export const updateTask = async (task: TaskAPI): Promise<boolean> => {
+//   setTimeout(async () => {
+//     const res = await api<messageAndStatusResponse>(`api/tasks/${task.id}`, {
+//       method: 'PUT',
+//       body: JSON.stringify(task)
+//     })
 
-  return res?.status === 200
+//     return res?.status === 200
+//   }, 5000)
+// }
+
+export const updateTask = async (task: TaskAPI): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const res = await api<messageAndStatusResponse>(
+          `api/tasks/${task.id}`,
+          {
+            method: 'PUT',
+            body: JSON.stringify(task)
+          }
+        )
+
+        if (res?.status === 200) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      } catch (error) {
+        console.log(error)
+        reject(false) // Si ocurre un error en la solicitud
+      }
+    }, 5000)
+  })
 }

@@ -6,9 +6,18 @@ import type { TaskType, TaskID } from '@/types/types'
 interface TodoEditFormProps {
   editTask: (todoId: TaskID, taskText: string) => void
   todo: TaskType
+  updateTaskIsLoading: boolean | null
+  changeTaskIsEditing: (id: number) => void
+  setUpdateTaskIsLoading: React.Dispatch<React.SetStateAction<boolean | null>>
 }
 
-const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
+const TodoEditForm: React.FC<TodoEditFormProps> = ({
+  editTask,
+  todo,
+  updateTaskIsLoading,
+  changeTaskIsEditing,
+  setUpdateTaskIsLoading
+}) => {
   const [inputValue, setInputValue] = useState(todo.text)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -16,8 +25,6 @@ const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
     e.preventDefault()
 
     editTask(todo.id, inputValue)
-
-    setInputValue('')
   }
 
   useEffect(() => {
@@ -30,27 +37,47 @@ const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ): void => setInputValue(e.target.value)
 
+  const handleCancelButton = (): void => {
+    changeTaskIsEditing(todo.id)
+    setUpdateTaskIsLoading(null)
+    setInputValue('')
+  }
+
   return (
-    <form
-      action=""
-      className="flex items-center gap-4"
-      onSubmit={(e) => handleSubmit(e)}
-    >
-      <Input
-        type="text"
-        value={inputValue}
-        placeholder="Type Task"
-        ref={inputRef}
-        className="border-zinc-800 bg-zinc-900/60 py-5 pl-4 text-white shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
-        onChange={(e) => handleTaskInputOnChange(e)}
-      />
-      <Button
-        type="submit"
-        className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
+    <div className="relative">
+      <form
+        className="flex items-center justify-center gap-4"
+        onSubmit={(e) => handleSubmit(e)}
       >
-        Edit Task
-      </Button>
-    </form>
+        <Input
+          type="text"
+          value={inputValue}
+          placeholder="Type Task"
+          ref={inputRef}
+          className="border-zinc-800 bg-zinc-900/60 py-5 pl-4 text-white shadow-md shadow-zinc-900 transition-all duration-300 ease-out placeholder:text-zinc-500 focus-visible:border-zinc-500 focus-visible:ring-0 focus-visible:ring-zinc-700"
+          onChange={(e) => handleTaskInputOnChange(e)}
+          disabled={updateTaskIsLoading === null ? false : updateTaskIsLoading}
+        />
+        <div className="flex items-center justify-center gap-1">
+          <Button
+            type="button"
+            className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
+            onClick={() => handleCancelButton()}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="cursor-pointer border border-zinc-800 bg-zinc-900/60 text-zinc-300 shadow-md shadow-zinc-900 transition-all duration-300 ease-in-out hover:bg-zinc-900"
+            disabled={
+              updateTaskIsLoading === null ? false : updateTaskIsLoading
+            }
+          >
+            Edit
+          </Button>
+        </div>
+      </form>
+    </div>
   )
 }
 

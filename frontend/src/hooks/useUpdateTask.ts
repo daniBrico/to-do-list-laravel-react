@@ -5,19 +5,21 @@ import { useState } from 'react'
 interface useUpdateTaskReturn {
   updateSelectedTask: (task: TaskAPI) => Promise<boolean>
   updateTaskError: Error | null
-  updateTaskIsLoading: boolean
+  updateTaskIsLoading: boolean | null
   setUpdateTaskError: React.Dispatch<React.SetStateAction<Error | null>>
+  setUpdateTaskIsLoading: React.Dispatch<React.SetStateAction<boolean | null>>
 }
 
 const useUpdateTask = (): useUpdateTaskReturn => {
   const [updateTaskError, setUpdateTaskError] = useState<Error | null>(null)
-  const [updateTaskIsLoading, setUpdateTaskIsLoading] = useState<boolean>(false)
+  const [updateTaskIsLoading, setUpdateTaskIsLoading] = useState<
+    boolean | null
+  >(null)
 
   const updateSelectedTask = async (task: TaskAPI): Promise<boolean> => {
     setUpdateTaskIsLoading(true)
 
     try {
-      console.log('🚀 ~ updateSelectedTask ~ task: ', task)
       const success = await updateTask(task)
 
       if (!success)
@@ -36,7 +38,8 @@ const useUpdateTask = (): useUpdateTaskReturn => {
     updateSelectedTask,
     updateTaskError,
     updateTaskIsLoading,
-    setUpdateTaskError
+    setUpdateTaskError,
+    setUpdateTaskIsLoading
   }
 }
 
