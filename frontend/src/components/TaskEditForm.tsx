@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import type { Task, TaskID } from '@/types/types'
+import type { TaskType, TaskID } from '@/types/types'
 
 interface TodoEditFormProps {
   editTask: (todoId: TaskID, taskText: string) => void
-  todo: Task
+  todo: TaskType
 }
 
 const TodoEditForm: React.FC<TodoEditFormProps> = ({ editTask, todo }) => {
-  const [inputValue, setInputValue] = useState(todo.task)
+  const [inputValue, setInputValue] = useState(todo.text)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {

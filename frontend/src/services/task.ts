@@ -1,4 +1,4 @@
-import type { Task, TaskAPI, TaskID } from '@/types/types'
+import type { TaskType, TaskAPI, TaskID } from '@/types/types'
 import api from './api'
 
 export interface ResponseGetTasks {
@@ -6,12 +6,12 @@ export interface ResponseGetTasks {
   status: number
 }
 
-export const getTasks = async (): Promise<Task[]> => {
+export const getTasks = async (): Promise<TaskType[]> => {
   const res = await api<ResponseGetTasks>('api/tasks')
 
   if (res === null) return []
 
-  const tasks: Task[] = res.tasks.map((taskAPI) => {
+  const tasks: TaskType[] = res.tasks.map((taskAPI) => {
     return { ...taskAPI, isEditing: false }
   })
 
@@ -23,7 +23,7 @@ export interface ResponseSetTask {
   status: number
 }
 
-export const createTask = async (task: TaskAPI): Promise<Task | null> => {
+export const createTask = async (task: TaskAPI): Promise<TaskType | null> => {
   const res = await api<ResponseSetTask>('api/task', {
     method: 'POST',
     body: JSON.stringify(task)
@@ -33,9 +33,9 @@ export const createTask = async (task: TaskAPI): Promise<Task | null> => {
 
   const taskFromAPI = res.task
 
-  const newTask: Task = {
+  const newTask: TaskType = {
     id: taskFromAPI.id,
-    task: taskFromAPI.task,
+    text: taskFromAPI.text,
     isCompleted: taskFromAPI.isCompleted,
     isEditing: false
   }
@@ -43,14 +43,23 @@ export const createTask = async (task: TaskAPI): Promise<Task | null> => {
   return newTask
 }
 
-interface deleteTaskResponse {
+interface messageAndStatusResponse {
   message: string
   status: number
 }
 
 export const deleteTask = async (id: TaskID): Promise<boolean> => {
-  const res = await api<deleteTaskResponse>(`api/tasks/${id}`, {
+  const res = await api<messageAndStatusResponse>(`api/tasks/${id}`, {
     method: 'DELETE'
+  })
+
+  return res?.status === 200
+}
+
+export const updateTask = async (task: TaskAPI): Promise<boolean> => {
+  const res = await api<messageAndStatusResponse>(`api/tasks/${task.id}`, {
+    method: 'PUT',
+    body: JSON.stringify(task)
   })
 
   return res?.status === 200

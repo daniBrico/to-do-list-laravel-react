@@ -16,9 +16,9 @@ const useDeleteTask = (): useDeleteTask => {
     setDeleteTaskIsLoading(true)
 
     try {
-      const succes = await deleteTask(task)
+      const success = await deleteTask(task)
 
-      if (!succes)
+      if (!success)
         throw new Error('No se pudo eliminar la tarea en el servidor.')
 
       return true

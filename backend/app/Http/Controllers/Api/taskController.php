@@ -14,7 +14,7 @@ class taskController extends Controller
     // Lista todas las tareas
     public function index()
     {
-        $tasks = Task::select('id', 'task', 'isCompleted')->get();
+        $tasks = Task::select('id', 'text', 'isCompleted')->get();
 
         $data = [
             'tasks' => $tasks,
@@ -28,7 +28,7 @@ class taskController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'task' => 'required',
+            'text' => 'required',
             'isCompleted' => 'required',
         ]);
 
@@ -43,7 +43,7 @@ class taskController extends Controller
         }
 
         $createdTask = Task::create([
-            'task' => $request->task,
+            'text' => $request->text,
             'isCompleted' => $request->isCompleted,
         ]);
 
@@ -57,7 +57,7 @@ class taskController extends Controller
         }
 
         $data = [
-            'task' => $createdTask->only(['id', 'task', 'isCompleted']),
+            'task' => $createdTask->only(['id', 'text', 'isCompleted']),
             'status' => 201
         ];
 
@@ -112,13 +112,13 @@ class taskController extends Controller
     }
 
     // Actualiza una tarea
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
         $task = Task::find($id);
 
         if (!$task) {
             $data = [
-                'message' => 'Estudiante no encontrado',
+                'message' => 'Tarea no encontrado',
                 'status' => 404
             ];
 
@@ -126,7 +126,7 @@ class taskController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'task' => 'required',
+            'text' => 'required',
             'isCompleted' => 'required',
         ]);
 
@@ -138,7 +138,7 @@ class taskController extends Controller
             ];
         }
 
-        $task->task = $request->task;
+        $task->text = $request->text;
         $task->isCompleted = $request->isCompleted;
 
         $task->save();

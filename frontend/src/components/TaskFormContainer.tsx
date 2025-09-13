@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import TaskForm from './TaskForm'
-import Todo from './Task'
-import type { Task, TaskID } from '@/types/types'
+import Task from './Task'
+import type { TaskType, TaskID } from '@/types/types'
 import TodoEditForm from './TaskEditForm'
 import useGetTasks from '@/hooks/useGetTasks'
 import useCreateTask from '@/hooks/useCreateTask'
 import useDeleteTask from '@/hooks/useDeleteTask'
 import { LoadingSpinner } from './LoadingSpinner'
 import CreateNewTaskMessage from './CreateNewTaskMessage'
+import useUpdateTask from '@/hooks/useUpdateTask'
 
 const TaskFormContainer: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<TaskType[]>([])
   const [displayMessage, setDisplayMessage] = useState(false)
 
   const { tasksFromAPI, tasksIsLoading } = useGetTasks()
@@ -22,6 +23,7 @@ const TaskFormContainer: React.FC = () => {
     setCreateTaskError
   } = useCreateTask()
   const { deleteTaskError, deleteTaskFromAPI } = useDeleteTask()
+  const { updateSelectedTask } = useUpdateTask()
 
   useEffect(() => {
     if (tasksFromAPI.length === 0) return
@@ -36,7 +38,7 @@ const TaskFormContainer: React.FC = () => {
       ...tasks,
       {
         id: taskFromAPI.id,
-        task: taskFromAPI.task,
+        text: taskFromAPI.text,
         isCompleted: false,
         isEditing: false
       }
@@ -61,8 +63,8 @@ const TaskFormContainer: React.FC = () => {
     }
   }, [displayMessage, taskIsLoading])
 
-  const addTask = (todo: string): void => {
-    newTask({ id: 0, task: todo, isCompleted: false })
+  const addTask = (taskText: string): void => {
+    newTask({ id: 0, text: taskText, isCompleted: false })
     setDisplayMessage(true)
   }
 
@@ -91,13 +93,28 @@ const TaskFormContainer: React.FC = () => {
       )
     )
 
-  const editTask = (id: TaskID, taskText: string): void => {
+  const editTask = (selectedTaskID: TaskID, newTaskText: string): void => {
     // Tengo el id y el nuevo texto de la tarea que debo modificar
+    const selectedTask: TaskType | undefined = tasks.find(
+      (task) => task.id === selectedTaskID
+    )
+
+    if (selectedTask === undefined) return
+
+    const success = updateSelectedTask({
+      id: selectedTaskID,
+      isCompleted: selectedTask.isCompleted,
+      text: newTaskText
+    })
+
+    console.log('🚀 ~ editTask ~ success: ', success)
+
+    if (!success) return
 
     setTasks(
       tasks.map((todo) =>
-        todo.id === id
-          ? { ...todo, task: taskText, isEditing: !todo.isEditing }
+        todo.id === selectedTaskID
+          ? { ...todo, text: newTaskText, isEditing: !todo.isEditing }
           : todo
       )
     )
@@ -119,7 +136,6 @@ const TaskFormContainer: React.FC = () => {
         displayMessage={displayMessage}
         taskIsLoading={taskIsLoading}
       />
-
       <p className="mt-12 ml-2 text-base font-light text-zinc-400">Task list</p>
       <div className="scrollbar-styles flex max-h-48 min-h-48 flex-col gap-3 overflow-y-scroll rounded-sm bg-zinc-700/20 px-2 py-4">
         {tasksIsLoading ? (
@@ -133,7 +149,7 @@ const TaskFormContainer: React.FC = () => {
               todo.isEditing ? (
                 <TodoEditForm key={index} editTask={editTask} todo={todo} />
               ) : (
-                <Todo
+                <Task
                   key={index}
                   todo={todo}
                   deleteTask={deleteTask}

@@ -1,17 +1,17 @@
 import classNames from 'classnames'
-import type { Task, TaskID } from '@/types/types'
+import type { TaskType, TaskID } from '@/types/types'
 import EditIconSvg from './svg/EditIconSvg'
 import TrashIconSvg from './svg/TrashIconSvg'
 import { Checkbox } from './ui/checkbox'
 
 interface TodoProps {
-  todo: Task
+  todo: TaskType
   deleteTask: (id: TaskID) => void
   changeTaskIsEditing: (id: TaskID) => void
   toggleComplete: (id: TaskID) => void
 }
 
-const Todo: React.FC<TodoProps> = ({
+const Task: React.FC<TodoProps> = ({
   todo,
   deleteTask,
   changeTaskIsEditing,
@@ -45,7 +45,7 @@ const Todo: React.FC<TodoProps> = ({
             'line-through opacity-60': todo.isCompleted
           })}
         >
-          {todo.task}
+          {todo.text}
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -67,4 +67,4 @@ const Todo: React.FC<TodoProps> = ({
   )
 }
 
-export default Todo
+export default Task

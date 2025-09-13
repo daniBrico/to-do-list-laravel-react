@@ -3,11 +3,11 @@ declare((strict_types = 1))
 export type TaskID = number
 
 // Todo types
-export interface Task {
+export interface TaskType {
   id: TaskID
-  task: string
+  text: string
   isCompleted: boolean
   isEditing: boolean
 }
 
-export type TaskAPI = Omit<Task, 'isEditing'>
+export type TaskAPI = Omit<TaskType, 'isEditing'>

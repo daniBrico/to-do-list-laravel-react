@@ -1,15 +1,15 @@
 import { getTasks } from '@/services/task'
-import type { Task } from '@/types/types'
+import type { TaskType } from '@/types/types'
 import { useEffect, useState } from 'react'
 
 interface useGetTasksReturn {
-  tasksFromAPI: Task[]
+  tasksFromAPI: TaskType[]
   tasksError: Error | null
   tasksIsLoading: boolean
 }
 
 const useGetTasks = (): useGetTasksReturn => {
-  const [tasksFromAPI, setTasksFromAPI] = useState<Task[]>([])
+  const [tasksFromAPI, setTasksFromAPI] = useState<TaskType[]>([])
   const [tasksError, setTasksError] = useState<Error | null>(null)
   const [tasksIsLoading, setTasksIsLoading] = useState<boolean>(true)
 
